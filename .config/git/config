@@ -5,3 +5,8 @@
   excludesfile = ~/.config/gitignore
 [pull]
   ff = only
+[alias]
+  s = status
+  a = add
+  d = !git --no-pager diff --stat
+
