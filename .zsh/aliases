@@ -1,4 +1,4 @@
-alias dotfiles="/usr/bin/git --git-dir=$HOME/.config/ --work-tree=$HOME"
+alias dff="/usr/bin/git --git-dir=$HOME/.config/ --work-tree=$HOME"
 
 # Quick-nav
 alias src="cd $SOURCE_CODE_DIR"
