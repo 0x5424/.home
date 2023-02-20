@@ -1,0 +1,7 @@
+[init]
+  defaultBranch = source
+[core]
+  pager = less -FRSX
+  excludesfile = ~/.config/gitignore
+[pull]
+  ff = only

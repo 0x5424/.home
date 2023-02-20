@@ -1,0 +1,11 @@
+# Global gitignore
+
+.DS_Store
+
+.env
+.env.production
+.env.staging
+.env.development
+.env.development.local
+
+/node_modules/
