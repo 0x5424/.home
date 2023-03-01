@@ -24,3 +24,4 @@ alias mv='mv -i'
 
 # Eject drive
 alias eject="diskutil unmountDisk $@"
+
