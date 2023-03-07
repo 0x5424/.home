@@ -1,0 +1,23 @@
+{
+  "ensure_newline_at_eof_on_save": true,
+  "animation_enabled": false,
+  "font_size": 11,
+  "hot_exit": "disabled",
+  "show_full_path": true,
+  "tab_size": 2,
+  "translate_tabs_to_spaces": true,
+  "trim_automatic_white_space": true,
+  "trim_trailing_white_space_on_save": "all",
+  "highlight_line": true,
+  "highlight_modified_tabs": true,
+  "indent_guide_options": ["draw_active"],
+  "binary_file_patterns": ["node_modules/**/*",],
+  "dark_theme": "Adaptive.sublime-theme",
+  "light_theme": "Default.sublime-theme",
+  "color_scheme": "Monokai.sublime-color-scheme",
+  "show_encoding": true,
+  "ignored_packages":
+  [
+		"Vintage",
+  ],
+}

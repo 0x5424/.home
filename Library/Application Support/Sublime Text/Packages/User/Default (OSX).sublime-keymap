@@ -1,0 +1,56 @@
+[
+  // select all within current bracket scope
+  {
+    "keys": ["super+shift+a"],
+    "command": "bh_key",
+    "args": {"no_outside_adj": null, "no_block_mode": true, "lines": true, "plugin": {"type": ["__all__"], "command": "bh_modules.bracketselect"}},
+  },
+  // delete all within current bracket scope
+  {
+    "keys": ["super+shift+backspace"],
+    "command": "bh_key",
+    "args": {"no_outside_adj": null, "no_block_mode": null, "lines": true, "plugin": {"type": ["__all__"], "command": "bh_modules.bracketremove", "args": {"remove_content": true}}},
+  },
+  // jump to beginning bracket
+  {
+    "keys": ["super+up"],
+    "command": "bh_key",
+    "args": {"no_outside_adj": null, "no_block_mode": null, "lines": true, "plugin": {"type": ["__all__"], "command": "bh_modules.bracketselect", "args": {"select": "left"}}},
+  },
+  // jump to end bracket
+  {
+    "keys": ["super+down"],
+    "command": "bh_key",
+    "args": {"no_outside_adj": null, "no_block_mode": null, "lines": true, "plugin": {"type": ["__all__"], "command": "bh_modules.bracketselect", "args": {"select": "right"}}},
+  },
+  // overwrite zoom keys; (- switches to 1 pane, + switches to 2 panes)
+  {
+    "keys": ["super+equals"],
+    "command": "set_layout",
+    "args": {"cols": [0, 0.5, 1], "rows": [0, 1], "cells": [[0, 0, 1, 1], [1, 0, 2, 1]]},
+  },
+  {
+    "keys": ["super+minus"],
+    "command": "set_layout",
+    "args": {"cols": [0, 1], "rows": [0, 1], "cells": [[0, 0, 1, 1]]},
+  },
+  // focus file
+  {"keys": ["super+0"], "command": "focus_file_on_sidebar"},
+  // command+f toggles find
+  {"keys": ["super+f"], "command": "show_panel", "args": {"panel": "find", "reverse": false, "toggle": true}},
+  // goto file at cursor
+  {"keys": ["super+;"], "command": "lsp_symbol_definition"},
+  // find references
+  {"keys": ["super+shift+;"], "command": "lsp_symbol_references"},
+  // open LSP messages
+  { "keys": ["ctrl+backquote"], "command": "lsp_show_diagnostics_panel"},
+  // prevent accidentally opening slow OS file prompt
+  {"keys": ["super+o"], "command": "overlay", "args": {"overlay": "goto", "show_files": true}},
+  // mimic command+arrows; only delete to BOL/EOL
+  {"keys": ["super+backspace"], "command": "run_macro_file", "args": {"file": "res://Packages/Default/Delete to BOL.sublime-macro"}},
+  // rename current file
+  {"keys": ["super+shift+/"], "command": "rename_file"},
+  // command+(pgup|pgdn) to BOF, EOF
+  {"keys": ["super+pageup"], "command": "move_to", "args": {"to": "bof"}},
+  {"keys": ["super+pagedown"], "command": "move_to", "args": {"to": "eof"}},
+]
