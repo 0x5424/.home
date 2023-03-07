@@ -95,7 +95,7 @@ hook global InsertCompletionShow .* %{
 
 # Init plug.kak
 source "%val{config}/plugins/plug.kak/rc/plug.kak"
-plug "andreyorst/plug.kak"
+plug "andreyorst/plug.kak" noload
 
 # Init other plugins
 plug "occivink/kakoune-filetree"
