@@ -1,12 +1,22 @@
 alias dff="/usr/bin/git --git-dir=$HOME/.config/ --work-tree=$HOME"
 
 # Quick-nav
-alias src="cd $SOURCE_CODE_DIR"
-alias dotf="cd $DOTFILES_DIR"
+__change_dir() {
+  base="${1:-src}"
+  target="$(echo $2 | xargs)"
+  if [ -e "$HOME/$base/$target" ]; then
+    cd "$HOME/$base/$target"
+  else
+    cd "$HOME/$base"
+  fi
+}
+alias ~s="__change_dir src $@"
 
 # Ripped from gitfast
 alias gst="git status"
 alias gco="git checkout"
+alias ga="git add"
+alias gd="git diff"
 
 # Ripped from common-aliases
 alias l='ls -lFh'     #size,show type,human readable

@@ -15,6 +15,10 @@ ZSH_THEME='minimal'
 plugins=(pass zsh-syntax-highlighting)
 source "$ZSH/oh-my-zsh.sh"
 
+# Work aliases (not public)
+WORK=$HOME/work
+[ -s "$WORK/aliases.zsh" ] && source "$WORK/aliases.zsh"
+
 # Node.js
 # export NVM_DIR="$HOME/.nvm"
 # [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
