@@ -4,13 +4,17 @@ set-option global autoinfo command|onkey|normal
 # Indent with 2 spaces
 set-option global indentwidth 2
 
+# Tab characters should take up 2 spaces
+set-option global tabstop 2
+
 # Always keep 10 lines visible above/below cursor; 0 cols because softwrap enabled
 set-option global scrolloff 10,0
 
 # Display the status bar on top, allow selections using mouse cursor
-set-option global ui_options terminal_status_on_top=true terminal_enable_mouse=true terminal_assistant=cat
+set-option global ui_options terminal_status_on_top=true terminal_enable_mouse=true terminal_assistant=cat terminal_padding_full=true
+
 # Line number config
-add-highlighter global/ number-lines -hlcursor -separator '  ' -cursor-separator '->'
+add-highlighter global/ number-lines -relative -hlcursor -separator '  ' -cursor-separator '->' -min-digits 3
 
 # Highlight trailing whitespace
 add-highlighter global/ regex \h+$ 0:Error
