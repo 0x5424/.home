@@ -11,8 +11,10 @@ set-option global tabstop 2
 set-option global scrolloff 10,0
 
 # Display the status bar on top, allow selections using mouse cursor
-set-option global ui_options terminal_enable_mouse=true terminal_assistant=cat terminal_padding_fill=true
-
+set -add global ui_options terminal_assistant=cat
+set -add global ui_options terminal_enable_mouse=true
+set -add global ui_options terminal_padding_fill=true
+set -add global ui_options terminal_padding_char=▚
 # Line number config
 add-highlighter global/ number-lines -relative -hlcursor -separator '  ' -cursor-separator '->' -min-digits 3
 
@@ -64,7 +66,7 @@ map global user y "<a-|> pbcopy<ret>" -docstring "yank selection into OS clipboa
 map global user p "d! pbpaste<ret>" -docstring "paste from OS clipboard"
 
 # Open filetree at current project dir
-map global user , ":filetree<ret>" -docstring "leave buffer to navigate filetree"
+map global user , ":filetree -consider-gitignore -dirs-first<ret>" -docstring "leave buffer to navigate filetree"
 
 # Comment line
 map global user / ":comment-line<ret>" -docstring "comment selected lines"
@@ -112,7 +114,15 @@ source "%val{config}/plugins/plug.kak/rc/plug.kak"
 plug "andreyorst/plug.kak" noload
 
 # Init other plugins
-plug "occivink/kakoune-filetree"
+plug "occivink/kakoune-filetree" config %{
+  set-option global filetree_indentation_level 1
+  face global FileTreeDirColor cyan,default+b
+  face global FileTreeFileName default,default+F
+  face global FileTreeOpenFiles black,green+F
+
+  # TODO: Add custom highlighters regexps for specific file types
+}
+
 plug "andreyorst/smarttab.kak" config %{
   hook global WinSetOption filetype=(ruby|javascript|typescript|kak|sh|markdown) expandtab
 }
@@ -143,27 +153,27 @@ hook global WinSetOption filetype=(ruby|typescript|javascript) %{
   # Auto-show definitions on hover
   lsp-auto-hover-enable
   # Definition toolbox anchored to cursor (as opposed to kakoune menu bar)
-  set global lsp_hover_anchor true
-  set global lsp_hover_max_lines 30
+  set-option global lsp_hover_anchor true
+  set-option global lsp_hover_max_lines 30
 
   # Show diagnostics per line
   lsp-inlay-diagnostics-enable global
 
   # Flag lines with diagnostics
   lsp-diagnostic-lines-enable global
-  set global lsp_diagnostic_line_error_sign '▓'
-  set global lsp_diagnostic_line_hint_sign '?'
-  set global lsp_diagnostic_line_info_sign 'i'
-  set global lsp_diagnostic_line_warning_sign '▒'
+  set-option global lsp_diagnostic_line_error_sign '▓'
+  set-option global lsp_diagnostic_line_hint_sign '?'
+  set-option global lsp_diagnostic_line_info_sign 'i'
+  set-option global lsp_diagnostic_line_warning_sign '▒'
 
   # Show/suggest code actions
-  set global lsp_auto_show_code_actions true
+  set-option global lsp_auto_show_code_actions true
 
   # Enable inlay hints (LSP 3.17 proposal)
   lsp-inlay-hints-enable global
 
   # Show references to token under cursor when pausing (normal mode only)
-  set global lsp_auto_highlight_references true
+  set-option global lsp_auto_highlight_references true
 }
 
 # Apply theme at the end to take priority over previously-defined faces

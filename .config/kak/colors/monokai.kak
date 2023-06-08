@@ -105,7 +105,7 @@ face global StatusCursor black,cyan
 face global Prompt yellow,default
 face global MatchingChar default,default+b
 face global Whitespace default,default+fd
-face global BufferPadding blue,default
+face global BufferPadding black,default+r
 
 # For LSP infobox (unmodified)
 # face global InfoDefault               Information
