@@ -25,14 +25,16 @@ add-highlighter global/ dynregex "%reg{/}" 0:+ub
 # Softwrap long lines
 add-highlighter global/ wrap -word -indent
 
+###################
+## BEGIN KEYMAPS ##
+###################
+
 # Repurpose visual mode for inner object selection
 map global normal v "<a-i>"
 
-# Select current & upper/lower lines
-map global normal J "J<a-x>"
-map global normal K "K<a-x>"
-
-# TODO: IDE-like create new cursor (up|down) at current column
+# IDE-like create new cursor (up|down) at current column
+# ...embarrasingly took a long time to figure this out
+map global normal <a-j> "C"
 
 # Select word under cursor -> enter user mode (used to chain like many IDE's ctrl+d)
 map global normal D "<a-i>w*<space>"
@@ -53,11 +55,23 @@ map global user c "c" -docstring "Change selected text"
 map global normal <a-backspace> "hb<a-d>"
 map global insert <a-backspace> "<esc>hb<a-d>i"
 
-# Userspace shortcuts; Use with `space` followed by the key
-map -docstring "yank selection into OS clipboard" global user y "<a-|> pbcopy<ret>"
-map -docstring "paste from OS clipboard" global user p "d! pbpaste<ret>"
-map -docstring "leave buffer to navigate filetree" global user , ":filetree<ret>"
-map -docstring "comment selected lines" global user / ":comment-line<ret>"
+# goto BOL and EOL... still can't kick this habit
+map global normal <home> "gh"
+map global normal <end> "gl"
+
+# OS clipboard
+map global user y "<a-|> pbcopy<ret>" -docstring "yank selection into OS clipboard"
+map global user p "d! pbpaste<ret>" -docstring "paste from OS clipboard"
+
+# Open filetree at current project dir
+map global user , ":filetree<ret>" -docstring "leave buffer to navigate filetree"
+
+# Comment line
+map global user / ":comment-line<ret>" -docstring "comment selected lines"
+
+####################
+## BEGIN COMMANDS ##
+####################
 
 # Shortcut to quickly exit the editor
 define-command -docstring "save and quit" x "write-all; quit"
