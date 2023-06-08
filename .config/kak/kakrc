@@ -11,7 +11,7 @@ set-option global tabstop 2
 set-option global scrolloff 10,0
 
 # Display the status bar on top, allow selections using mouse cursor
-set-option global ui_options terminal_status_on_top=true terminal_enable_mouse=true terminal_assistant=cat terminal_padding_full=true
+set-option global ui_options terminal_enable_mouse=true terminal_assistant=cat terminal_padding_fill=true
 
 # Line number config
 add-highlighter global/ number-lines -relative -hlcursor -separator '  ' -cursor-separator '->' -min-digits 3
@@ -34,34 +34,34 @@ map global normal K "K<a-x>"
 
 # TODO: IDE-like create new cursor (up|down) at current column
 
-# IDE-like find+select word under cursor & goto next match
-# TODO: Fix so first invocation does not select 2 objects (works as expected after / register updated)
-map global normal D "<a-i>w*N"
+# Select word under cursor -> enter user mode (used to chain like many IDE's ctrl+d)
+map global normal D "<a-i>w*<space>"
+
+# Continue selection from search register -> re-enter user mode
+# (fyi  %reg{} in the docstring doesnt interpolate properly)
+map global user D "N<space>" -docstring "Select next matching reference %reg{slash}"
+
+# Replace current selection(s) with yank register -> re-enter user mode
+map global user R "R<space>" -docstring "Replace selections with yank register %reg{dquote}"
+
+# Normally enter insert mode from user mode
+map global user i "i" -docstring "Enter insert mode (start)"
+map global user a "a" -docstring "Enter insert mode (end)"
+map global user c "c" -docstring "Change selected text"
 
 # OSX text deletion to beginning of word, keeping character under cursor
 map global normal <a-backspace> "hb<a-d>"
 map global insert <a-backspace> "<esc>hb<a-d>i"
 
-# Different cursor color for insert mode
-hook global ModeChange .*:.*:insert %{
-  set-face window PrimaryCursor default,yellow
-  set-face window PrimaryCursorEol default,red
-}
-hook global ModeChange .*:insert:.* %{
-  try %{
-    unset-face window PrimaryCursor
-    unset-face window PrimaryCursorEol
-  }
-}
-
 # Userspace shortcuts; Use with `space` followed by the key
 map -docstring "yank selection into OS clipboard" global user y "<a-|> pbcopy<ret>"
-map -docstring "paste from OS clipboard" global user p "<a-!> pbpaste<ret>"
+map -docstring "paste from OS clipboard" global user p "d! pbpaste<ret>"
 map -docstring "leave buffer to navigate filetree" global user , ":filetree<ret>"
 map -docstring "comment selected lines" global user / ":comment-line<ret>"
 
 # Shortcut to quickly exit the editor
 define-command -docstring "save and quit" x "write-all; quit"
+define-command -docstring "quit without saving" X "quit!"
 
 # define-command -params .. -docstring %{
 #   tail [<arguments>]: tail utility wrapper
