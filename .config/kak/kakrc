@@ -10,6 +10,28 @@ set-option global tabstop 2
 # Always keep 10 lines visible above/below cursor; 0 cols because softwrap enabled
 set-option global scrolloff 10,0
 
+# "Hack" by escaping to shell to use brace expansion.
+# Do this to declare default grep options, otherwise kakoune forwards the literal string "--exclude-dir={foo,bar}"
+eval %sh{
+  exclude_dirs=`printf '%s ' --exclude-dir={node_modules,.git,build,dist}`
+  exclude_files=`printf '%s ' --exclude=\*.{svg,map}`
+  printf "declare-option str grep_ignore_patterns \"$exclude_dirs $exclude_files\""
+}
+
+# Custom grep (no access to aliases; also no newlines in string)
+set-option global grepcmd "grep -RHn -C 3 %opt{grep_ignore_patterns}"
+
+# Change grep highlight colors (90% copied from rc/grep.kak)
+hook -group grep-highlight global WinSetOption filetype=grep %{
+  remove-highlighter window/grep
+  add-highlighter window/grep group
+  face window Default bright-black,default
+  add-highlighter window/grep/ regex "^((?:\w:)?[^:\n]+):(\d+):(\d+)?([^\n]+)" 1:bright-cyan 2:bright-yellow 3:bright-yellow
+  add-highlighter window/grep/ regex "^((?:\w:)?[^:\n]+:\d+(\d+)?)([^\n]+)" 1:default,black 2:default,black 3:bright-white,black
+  add-highlighter window/grep/ line %{%opt{grep_current_line}} bright-red+b
+  hook -once -always window WinSetOption filetype=.* %{ remove-highlighter window/grep }
+}
+
 # Display the status bar on top, allow selections using mouse cursor
 set -add global ui_options terminal_assistant=cat
 set -add global ui_options terminal_enable_mouse=true
@@ -113,7 +135,7 @@ hook global InsertCompletionShow .* %{
 source "%val{config}/plugins/plug.kak/rc/plug.kak"
 plug "andreyorst/plug.kak" noload
 
-# Init other plugins
+# Filetree
 plug "occivink/kakoune-filetree" config %{
   set-option global filetree_indentation_level 1
   face global FileTreeDirColor cyan,default+b
@@ -123,6 +145,7 @@ plug "occivink/kakoune-filetree" config %{
   # TODO: Add custom highlighters regexps for specific file types
 }
 
+# Tabs vs spaces
 plug "andreyorst/smarttab.kak" config %{
   hook global WinSetOption filetype=(ruby|javascript|typescript|kak|sh|markdown) expandtab
 }
