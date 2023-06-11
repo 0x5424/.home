@@ -42,7 +42,7 @@ face global attribute green
 face global comment bright-black
 face global documentation comment
 face global meta red
-face global builtin default,bright-magenta+b
+face global builtin green # shell builtin
 
 # For markup (currently unmodified)
 face global title blue

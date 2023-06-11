@@ -33,6 +33,8 @@ hook -group grep-highlight global WinSetOption filetype=grep %{
 }
 
 # Display the status bar on top, allow selections using mouse cursor
+set -add global ui_options terminal_set_title=true
+set -add global ui_options terminal_status_on_top=true
 set -add global ui_options terminal_assistant=cat
 set -add global ui_options terminal_enable_mouse=true
 set -add global ui_options terminal_padding_fill=true
@@ -82,6 +84,12 @@ map global insert <a-backspace> "<esc>hb<a-d>i"
 # goto BOL and EOL... still can't kick this habit
 map global normal <home> "gh"
 map global normal <end> "gl"
+
+# Flip semicolon and option-semicolon behavior (anchor flip, reduce cursor respectively)
+map global normal <semicolon> "<a-;>"
+map global normal <a-semicolon> ";"
+
+map global normal <s-home> ":echo 'yea buddy'"
 
 # OS clipboard
 map global user y "<a-|> pbcopy<ret>" -docstring "yank selection into OS clipboard"
