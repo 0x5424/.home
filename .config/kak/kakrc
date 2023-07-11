@@ -13,8 +13,8 @@ set-option global scrolloff 10,0
 # "Hack" by escaping to shell to use brace expansion.
 # Do this to declare default grep options, otherwise kakoune forwards the literal string "--exclude-dir={foo,bar}"
 eval %sh{
-  exclude_dirs=`printf '%s ' --exclude-dir={node_modules,.git,build,dist}`
-  exclude_files=`printf '%s ' --exclude=\*.{svg,map}`
+  exclude_dirs=`printf '%s ' --exclude-dir={node_modules,.git,build,dist,builds}`
+  exclude_files=`printf '%s ' --exclude=\*.{svg,map,lock}`
   printf "declare-option str grep_ignore_patterns \"$exclude_dirs $exclude_files\""
 }
 
@@ -62,6 +62,10 @@ map global normal v "<a-i>"
 # ...embarrasingly took a long time to figure this out
 map global normal <a-j> "C"
 
+# Quickly change buffers
+map global normal <a-1> ": bp<ret>" -docstring "Previous buffer"
+map global normal <a-2> ": bn<ret>" -docstring "Next buffer"
+
 # Select word under cursor -> enter user mode (used to chain like many IDE's ctrl+d)
 map global normal D "<a-i>w*<space>"
 
@@ -89,7 +93,8 @@ map global normal <end> "gl"
 map global normal <semicolon> "<a-;>"
 map global normal <a-semicolon> ";"
 
-map global normal <s-home> ":echo 'yea buddy'"
+# Select whole lines downward (nice to combine with line count: eg. 15X to select 15 full lines
+map global normal X "Jx"
 
 # OS clipboard
 map global user y "<a-|> pbcopy<ret>" -docstring "yank selection into OS clipboard"
@@ -99,15 +104,41 @@ map global user p "d! pbpaste<ret>" -docstring "paste from OS clipboard"
 map global user , ":filetree -consider-gitignore -dirs-first<ret>" -docstring "leave buffer to navigate filetree"
 
 # Comment line
-map global user / ":comment-line<ret>" -docstring "comment selected lines"
+map global user / ":comment-line<ret>" -docstring "Comment lines w/ a selection"
+
+# Grep find
+map global normal F ":grep " -docstring "Find all"
+
+# Enter tabs mode
+map global normal t ": enter-user-mode tabs<ret>" -docstring 'tabs mode'
 
 ####################
 ## BEGIN COMMANDS ##
 ####################
 
+# Debug command used during command development
+define-command -hidden -docstring "duplicate A to B" _dup_current %{
+  eval %sh{
+    cp $kak_buffile $kak_text
+    source_file=`basename $kak_buffile`
+    printf "edit $kak_text"
+    printf ';; echo "%s"' "Copied $source_file to $kak_text"
+  }
+}
+
+# Duplicate current file
+define-command -docstring "duplicate current buffer" duplicate %{
+  prompt -init "%val{buffile}" "Duplicate to: " _dup_current
+}
+
+# Minimal fuzzy find
+define-command find -params 1 -shell-script-candidates %{ find . -type f } %{ edit %arg{1} }
+
+# Alias fuzzy find to p (IDE thing, don't ask)
+alias global p find
+
 # Shortcut to quickly exit the editor
-define-command -docstring "save and quit" x "write-all; quit"
-define-command -docstring "quit without saving" X "quit!"
+define-command -docstring "save and close buffer" x "write-all; delete-buffer"
 
 # define-command -params .. -docstring %{
 #   tail [<arguments>]: tail utility wrapper
@@ -155,12 +186,12 @@ plug "occivink/kakoune-filetree" config %{
 
 # Tabs vs spaces
 plug "andreyorst/smarttab.kak" config %{
-  hook global WinSetOption filetype=(ruby|javascript|typescript|kak|sh|markdown) expandtab
+  hook global WinSetOption filetype=(ruby|javascript|typescript|kak|sh|markdown|html|svelte) expandtab
 }
 
 # LSP
 eval %sh{ kak-lsp --kakoune -s $kak_session }
-hook global WinSetOption filetype=(ruby|typescript|javascript) %{
+hook global WinSetOption filetype=(ruby|typescript|javascript|svelte) %{
   lsp-enable-window
 
   # Suggested default maps
@@ -201,10 +232,16 @@ hook global WinSetOption filetype=(ruby|typescript|javascript) %{
   set-option global lsp_auto_show_code_actions true
 
   # Enable inlay hints (LSP 3.17 proposal)
-  lsp-inlay-hints-enable global
+  # lsp-inlay-hints-enable global
 
   # Show references to token under cursor when pausing (normal mode only)
   set-option global lsp_auto_highlight_references true
+}
+
+# Tabs
+plug "enricozb/tabs.kak" config %{
+  set-option global tabs_modelinefmt '%val{cursor_line}:%val{cursor_char_column} {{mode_info}} '
+  set-option global tabs_options --minified
 }
 
 # Apply theme at the end to take priority over previously-defined faces

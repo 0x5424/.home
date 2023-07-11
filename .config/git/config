@@ -12,4 +12,4 @@
 [alias]
   s = status
   d = !git --no-pager diff --stat
-
+  open = !$EDITOR $(git status --short | awk '$1 ~ /^M|A|U/ {print $2}' )

@@ -113,6 +113,12 @@ roots = ["package.json", "tsconfig.json", ".git", ".hg"]
 command = "typescript-language-server"
 args = ["--stdio"]
 
+[language.svelte]
+filetypes = ["svelte"]
+roots = ["package.json"]
+command = "svelteserver"
+args = ["--stdio"]
+
 # [language.typescript]
 # filetypes = ["typescript"]
 # roots = ["package.json", "tsconfig.json", ".git", ".hg"]
